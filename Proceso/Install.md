@@ -20,7 +20,7 @@
     Esta unidad ya tiene ID de grupo correspondiente a la suscripción '8a85f9815dbd9297015dbdb8186b428d'.
 
 
-## Deshabilitando repositorios innecesarios
+### Deshabilitando repositorios innecesarios
 
     [root@tower ~]# subscription-manager repos --disable="*"
     Repository 'rhel-7-server-openstack-11-devtools-debug-rpms' is disabled for this system.
@@ -28,13 +28,13 @@
     Repository 'rhel-7-server-openstack-7.0-tools-source-rpms' is disabled for this system.
     ( ... )
 
-## Habilitando repositorios necesarios.
+### Habilitando repositorios necesarios.
     [root@tower ~]# subscription-manager repos --enable="rhel-7-server-rpms"  --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-optional-rpms"
     Repository 'rhel-7-server-rpms' is enabled for this system.
     Repository 'rhel-7-server-optional-rpms' is enabled for this system.
     Repository 'rhel-7-server-extras-rpms' is enabled for this system.
 
-## Actualizando Sistemas
+### Actualizando Sistemas
     [root@tower ~]# yum update -y
     Complementos cargados:product-id, search-disabled-repos, subscription-manager
     rhel-7-server-extras-rpms                                                                                                                                                                   | 3.4 kB  00:00:00     

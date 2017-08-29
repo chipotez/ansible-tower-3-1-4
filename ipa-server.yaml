@@ -1,224 +1,28 @@
 ---
-- name: Creación de 2 Nodos de infraestructura {{ ':' }} Servidor IPA  & Servidor Tower
-  hosts: localhost
-  connection: connection
-  gather_facts: False
-  vars_files:
-     - gce/authentication
-     - gce/defaults
-     - notification/mail_authentication
-  vars:
-     attendees: "{{ lookup('file', 'ops-attendees.txt').split('\n') }}"
-  tasks:
-     - include: commons/setting_defaults.yaml
-       tags:
-          - always
-
-     - name: email is not defined
-       fail: msg="email is not defined"
-       when: email is not defined
-       tags:
-          - always
-
-#########################################
-#                                       #
-# Definiendo Nombre de usuarios         #
-#                                       #
-#########################################
-
-     - name: Lookup for this email{{ ':' }} {{ email }}
-       set_fact: line_selected={{ item }}
-       with_items: "{{ attendees }}"
-       when: email in item
-       tags:
-          - always
-
-     - fail: msg="{{ email }} No se encuentra en el archivo ops-attendees.txt"
-       when: line_selected is not defined
-       tags:
-          - always
-
-     - set_fact: user_id={{ line_selected.split(',')[0] }}
-       tags:
-          - always
-
-     - set_fact: name={{ line_selected.split(',')[1] }}
-       tags:
-          - always
-
-     - name: Definiendo ID para Servidor IPA {{ ':' }} {{ user_id }}-ipa
-       set_fact: ipa_server={{ user_id }}-ipa
-       tags:
-          - always
-
-#########################################
-#                                       #
-# Creando Servidor IPA  GCP             #
-#                                       #
-#########################################
-     - name: Creating instance {{ ':' }} {{ ipa_server }}
-       gce:
-         instance_names: "{{ ipa_server }}"
-         state: "present"
-         machine_type: "{{ machine_type }}"
-         image: "{{ image }}"
-         zone: "{{ zone }}"
-         network: "{{ network_name }}"
-         subnetwork: "{{ subnetwork_name }}"
-         tags: ["enable-ssh","openshift-master"]
-         disk_auto_delete: True
-         project_id: "{{ gce_project_id }}"
-         credentials_file: "{{ gce_credentials_file }}"
-         service_account_email: "{{ gce_service_account_email }}"
-       ignore_errors: True
-       register: master_instance_creation
-
-     - debug: var=master_instance_creation
-
-     - name: Asignando IP Publica{{ ':' }} {{ master_instance_creation.instance_data[0].public_ip }}
-       set_fact: ipa_server_public_ip={{ master_instance_creation.instance_data[0].public_ip }}
-
-     - name: Esperando disponibilidad de instancia {{ ':' }} {{ ipa_server_public_ip }}
-       wait_for: host:{{ ipa_server_public_ip }} port:{{ ssh_default_image_port }}  delay=60  state=started
-
-     - name: Agregando servidor a grupo de equipos{{ ':' }} ipa_hosts
-       add_host: groups=ipa_server_group hostname={{ ipa_server_public_ip }} ansible_user={{ ssh_default_image_user }} ansible_password={{ ssh_default_image_password }} ansible_port={{ ssh_default_image_port }}
-
-#"#######################################
-#                                       #
-# Creando Servidor IPA  GCP             #
-#                                       #
-#########################################
-
-- name: Preparando equipo para configuracion minima
-  hosts: all
+- name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
-  vars_files:
-     - gce/defaults
   tasks:
-     - name: Cargando Llaves SSH
-       set_fact: ssh_key={{ lookup('file','{{ ssh_key_file }}') }}
-       when: ssh_key_file is defined
-       tags:
-          - prepare
 
-     - name: Copiando Llaves ssh.
-       lineinfile: dest=/root/.ssh/authorized_keys state=present create=yes line="{{ ssh_key }}"
-       when: ssh_key is defined
-       tags:
-          - prepare
-
-     - name: Display all variables/facts known for a host
-       debug:
-          msg: "0={{ realm }} {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ansible_date_time.hour }}{{ ansible_date_time.minute }}"  
-
-     - name: Registrando Sistema en Portal de Red Hat.
-       command: subscription-manager register --username='' --password=''
-       ignore_errors: True
-
-     - name: Asignando Pool de Suscripciones.
-       command: subscription-manager attach --pool=8a85f9815dbd9297015dbdb8186b428d
-       ignore_errors: True
-
-     - name: Deshabilitando Repositorios innecesarios.
-       command: subscription-manager repos --disable="*"
-       ignore_errors: True
-
-     - name: Asignando repositorios necesarios instalación minimal
-       command: subscription-manager repos --enable="rhel-7-server-rpms"  --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-optional-rpms"
-       ignore_errors: True
-     
-#     - name: Actualizando Sistema Operativo
-#       yum:
-#         name: '*'
-#         state: latest
-       
-
-#########################################
-#                                       #
-# Instalacion y configuración Server IPA#
-#                                       #
-#########################################
-
+#######################################################
+#                                                     #
+# Creando Servidor IPA  GCP                           #
+#                                                     #
+#######################################################
 - name: Instalacion de Servidor IPA
-  hosts: ipa_server_group
-  gather_facts: True
-  vars_files:
-     - gce/defaults
-  vars_prompt:
-     - name: "real_password"
-       prompt: "Enter admin password"
-       private: yes
-     - name: "domain_password"
-       prompt: "Enter manager password"
-       private: yes
-  remote_user: root
-  tasks:
-     - name: Configurando nombre de Servidor IPA
-       hostname:
-         name: "{{ server_hostname }}" 
-     - name: Add IP address of all hosts to all hosts
-       lineinfile:
-          dest: /etc/hosts
-          line: "{{ ansible_eth0.ipv4.address }} {{ ansible_nodename }} {{ ansible_hostname }}"
-          state: present
-     - name: Instalando Paquetes necesarios de Servidor IPA.
-       yum: name={{ item }} state=present
-       with_items:
-               - ipa-server
-               - bind-dyndb-ldap
-               - ipa-server-dns
-#     - name: Enable firewalld
-#       service: name=firewalld state=started enabled=yes
-#     - name: Abriendo puertos de firewall.
-#       firewalld:
-#          service: "{{ item.service }}"
-#          permanent: "{{ item.permanent }}"
-#          state: disabled
-#          permanent: true
-#       with_items:
-#            - { service: 'ntp', permanent: true }
-#            - { service: 'http', permanent: true }
-#            - { service: 'https', permanent: true }
-#            - { service: 'ldap', permanent: true }
-#            - { service: 'ldaps', permanent: true }
-#            - { service: 'kerberos', permanent: true }
-#            - { service: 'kpasswd', permanent: true }
-#            - { service: 'dns', permanent: true }
-#     - name: Reiniciando servicio  firewalld
-#       command:  name=firewalld state=stopped
+  include: tareas/servidor-base.yaml
+  ignore_errors: True
 
-     - name: Reiniciando servicio  firewalld
-       command: systemctl stop firewalld.service
+######################################################
+#                                                    #
+# Instalacion y configuración Server IPA             #
+#                                                    #
+######################################################
 
-     - name: Reiniciando servicio  firewalld
-       command: systemctl disable firewalld.service
-
-     - name: Run the ipa-server-install command
-       command: ipa-server-install --ip-address={{ ansible_default_ipv4.address }} -r {{ realm }} -n {{ domain }} -p {{ real_password }} -a {{ domain_password }} --allow-zone-overlap --no-host-dns --mkhomedir --setup-dns --auto-reverse --auto-forwarders --hostname={{ server_hostname }} --subject="O={{ realm }} {{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ansible_date_time.hour }}{{ ansible_date_time.minute }}" -U
-
-
-###########################################
-#                                         #
-# Enviando Notificaciones a los usuarios  #
-#                                         #
-###########################################
-
-- name: Final Steps. Removing undesirable tags and notifying user
-  hosts: localhost
-  connection: local
-  gather_facts: False
-  vars_files:
-     - notification/mail_authentication
-     - notification/slack_authentication
-  tasks:
-     - include: commons/setting_defaults.yaml
-
-     - include: commons/ops-mail-ipa.yaml
-       when: default_smtp_server is defined and default_smtp_server is not none and default_smtp_port is defined and default_smtp_port is not none and default_smtp_username is defined and default_smtp_username is not none and default_smtp_password is defined and default_smtp_password is not none
-       tags:
-          - mail
-
-     - name: Notifying by Slack about sucessfully creation
-       slack: token={{ default_slack_token }} msg="TestDrive@Ops{{ ':' }} Environment for {{ name }} ({{ user_id }}) was successfully created"
-       when: default_slack_token is defined and default_slack_token is not none
+#- name: Instalacion de Servidor IPA
+#  include: ipa-server/deploy-ipa-server-2.yaml
+#  ignore_errors: True
+######################################################
+#                                                    #
+# Enviando Notificaciones a los usuarios             #
+#                                                    #
+######################################################

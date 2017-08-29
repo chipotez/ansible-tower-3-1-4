@@ -1,6 +1,7 @@
 ---
 - name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
+  hosts: 35.185.58.17
   tasks:
      - file: 
           path: /{{ mapm }}

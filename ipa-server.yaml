@@ -10,11 +10,12 @@
 #######################################################
 - name: Instalacion de Servidor IPA
   include: tareas/servidor-base.yaml
-  - file: 
-    path: /{{ mapm }}
-    owner: foo
-    group: foo
-    mode: 0644
+  ignore_errors: True
+- file: 
+  path: /{{ mapm }}
+  owner: foo
+  group: foo
+  mode: 0644
   ignore_errors: True
 
 ######################################################

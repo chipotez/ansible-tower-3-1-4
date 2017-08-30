@@ -1,20 +1,29 @@
 ---
-- name: Registro de Sistema operativo vía subscription manager.
-  gather_facts: False
+- name: PLAYBOOK DE TAREAS POS-INSTALACIÓN RHEL 7
+  gather_facts: True
   hosts: nuevos
   tasks:
-     - setup:
+
+# si necesitamos variables predefinidas y no habilitamos 
+# "gather_facts: False" podemos hacer un filtrado solo -
+# de la información que necesitamos con el siguiente ---
+# módulo.
+#
+#    - setup:
 #          filter: name*
-          gather_subset: network,virtual
-#     - name: Print mosh version
-#       debug: msg="address={{ ansible_default_ipv4.address }}"
+#          gather_subset: network,virtual
+#          filter=ansible_eth[0-2]
+#          filter=ansible_*_mb
 
 #######################################################
-#                                                     #
-# Creando Servidor IPA  GCP                           #
-#                                                     #
+# Tareas de registro a RHN:                           #
+#     Usuario.                                        #
+#     Password.                                       #
+#     Asignación de pool en suscripción.              #
+#     Deshabilitación de repositorios innecesarios.   #
+#     Asignación de repositorios base.                #
 #######################################################
-- name: Instalacion de Servidor IPA
+- name: Registro de equipo vía Subscription Manager.
   include: tareas/servidor-base.yaml
   ignore_errors: True
 

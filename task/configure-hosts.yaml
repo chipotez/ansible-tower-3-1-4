@@ -1,0 +1,15 @@
+- name: Preparando equipo para configuracion minima
+  gather_facts: True
+  vars_prompt:
+     - name: "nombre_host"
+       prompt: "Ingresar nombre de host"
+       private: yes
+  tasks: 
+    - name: Config | add hostname to hosts file
+      lineinfile:
+        dest: /etc/hosts
+        state: present
+        line: "{{ ansible_all_ipv4_addresses|last }} {{ nombre_host }} {{ nombre_host }}.{{ ansible_domain }}"
+        regexp: "{{ ansible_hostname }}"
+        backup: true
+        vars_prompt:

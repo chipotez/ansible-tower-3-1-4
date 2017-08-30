@@ -13,4 +13,4 @@
 #    - lineinfile:
 #        dest=/etc/hosts
 #        line='Hello, World!'
-#        state=present
+        state=present

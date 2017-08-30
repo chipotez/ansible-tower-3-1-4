@@ -9,13 +9,9 @@
              password: 'redhat2016!.-'
              pool: 8a85f9815dbd9297015dbdb8186b428d
 
-#     - name: Asignando Pool de Suscripciones.
-#       command: subscription-manager attach --pool=8a85f9815dbd9297015dbdb8186b428d
-#       ignore_errors: True
-
-#     - name: Deshabilitando Repositorios innecesarios.
-#       command: subscription-manager repos --disable="*"
-#       ignore_errors: True
+     - name: Deshabilitando Repositorios innecesarios.
+       command: subscription-manager repos --disable="*" --enable="rhel-7-server-rpms"  --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-optional-rpms"
+       ignore_errors: True
 
 #     - name: Asignando repositorios necesarios instalación minimal
 #       command: subscription-manager repos --enable="rhel-7-server-rpms"  --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-optional-rpms"

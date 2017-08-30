@@ -4,7 +4,7 @@
   hosts: nuevos
   tasks:
      - setup:
-          filter: *name*
+          filter: name*
      - name: Print mosh version
        debug: msg="address={{ ansible_default_ipv4.address }}"
 

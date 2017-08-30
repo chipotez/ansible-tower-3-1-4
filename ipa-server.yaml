@@ -1,7 +1,7 @@
 ---
 - name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
-  hosts: {{ ipas }}
+  hosts: localhost
   tasks:
      - file:
           path: /etc/foo.conf

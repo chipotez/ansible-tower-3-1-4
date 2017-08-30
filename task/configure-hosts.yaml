@@ -1,10 +1,10 @@
 - name: Preparando /etc/hosts
   gather_facts: True
   hosts: minimal
-  vars_prompt:
-     - name: "name"
-       prompt: "Ingresar nombre de host"
-       private: yes
+#  vars_prompt:
+#     - name: "name"
+#       prompt: "Ingresar nombre de host"
+#       private: yes
   tasks: 
     - name: Config | add hostname to hosts file
       lineinfile:

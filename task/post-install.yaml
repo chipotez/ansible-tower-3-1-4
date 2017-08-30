@@ -1,0 +1,14 @@
+- name: Preparando equipo para configuracion minima
+  gather_facts: True
+  hosts: nuevos
+  tasks:
+     - name: Registrando Sistema en Portal de Red Hat.
+       redhat_subscription:
+             state: present
+             username: m.pineda
+             password: 'redhat2016!.-'
+             pool: 8a85f9815dbd9297015dbdb8186b428d
+
+     - name: Deshabilitando Repositorios innecesarios.
+       command: subscription-manager repos --disable="*" --enable="rhel-7-server-rpms"  --enable="rhel-7-server-extras-rpms" --enable="rhel-7-server-optional-rpms"
+ignore_errors: True

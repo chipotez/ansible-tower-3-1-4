@@ -2,14 +2,9 @@
 - name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
   hosts: localhost
-  remote_user: root
   tasks:
-     - file:
-          path: /etc/foo.conf
-          state: touch
-          mode: "u=rw,g=r,o=r"
-       become: true
-       ignore_errors: True
+     - name: Print mosh version
+       debug: msg="address={{ ansible_default_ipv4.address }}"
 #######################################################
 #                                                     #
 # Creando Servidor IPA  GCP                           #

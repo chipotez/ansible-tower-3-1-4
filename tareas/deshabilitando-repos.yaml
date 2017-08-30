@@ -4,4 +4,4 @@
   tasks:
      - name: Borrando todos los repos.
        yum:
-          disablerepo: *
+          disablerepo: "*"

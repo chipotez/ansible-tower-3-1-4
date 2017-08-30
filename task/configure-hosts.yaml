@@ -13,4 +13,4 @@
 #       regexp: '^127\.0\.0\.1'
         backup: yes
     - debug:
-            msg: "System {{ nombre_equipo }}"
+            msg: "System {{ nombre_equipo }}-{{ ansible_date_time.iso8601_basic_short }}.{{ dominio_equipo }}"

@@ -8,9 +8,9 @@
   tasks: 
     - lineinfile:
         path: /etc/hosts
-        regexp: '^127\.0\.0\.1'
         line: '127.0.0.1 localhost'
-        state: absent
+        state: present
+        regexp: '^127\.0\.0\.1'
 #    - lineinfile:
 #        dest=/etc/hosts
 #        line='Hello, World!'

@@ -1,9 +1,0 @@
-- name: Preparando equipo para configuracion minima
-  gather_facts: True
-  hosts: nuevos
-  tasks:
-     - name: Borrando todos los repos.
-       yum_repository:
-          name: "*"
-          enabled: no
-       

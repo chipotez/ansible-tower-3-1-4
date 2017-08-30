@@ -1,0 +1,7 @@
+---
+- name: Preparando equipo para configuracion minima
+  gather_facts: True
+  hosts: nuevos
+  tasks:
+     - redhat_subscription:
+         state: absent

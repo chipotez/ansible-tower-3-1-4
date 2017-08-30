@@ -10,7 +10,7 @@
         path: /etc/hosts
         regexp: '^127\.0\.0\.1'
         line: '127.0.0.1 localhost'
-        state: present
+        state: absent
 #    - lineinfile:
 #        dest=/etc/hosts
 #        line='Hello, World!'

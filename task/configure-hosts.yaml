@@ -11,11 +11,7 @@
         line: '127.0.0.1 localhost'
         state: present
 #       regexp: '^127\.0\.0\.1'
-#       
         backup: yes
-    - lineinfile:
-        path: /etc/hosts
-        line: '10.17.32.0 localhostest'
-        state: present
-#       regexp: '^127\.0\.0\.1'
-        backup: yes
+    - name: Prueba de variables
+         debug:
+            msg: "System {{ nombre_equipo }}"

@@ -8,7 +8,6 @@
   tasks: 
     - name: Config | add hostname to hosts file
       lineinfile:
-          dest: /etc/hosts
-          line: "{{ ansible_eth0.ipv4.address }} {{ ansible_fqdn }}"
-          state: present
-          backup: true
+         dest: /etc/hosts
+         line: "{{ hostvars[item].ansible_host }} {{ hostvars[item].inventory_hostname }} {{ hostvars[item].inventory_hostname_short }}"
+         state: present

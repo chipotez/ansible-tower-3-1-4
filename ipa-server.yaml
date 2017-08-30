@@ -2,21 +2,21 @@
 - name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
   hosts: localhost
-  ansible_become: True
   tasks:
      - file:
           path: /etc/foo.conf
           state: touch
           mode: "u=rw,g=r,o=r"
+       become: true
        ignore_errors: True
 #######################################################
 #                                                     #
 # Creando Servidor IPA  GCP                           #
 #                                                     #
 #######################################################
-- name: Instalacion de Servidor IPA
-  include: tareas/servidor-base.yaml
-  ignore_errors: True
+#- name: Instalacion de Servidor IPA
+#  include: tareas/servidor-base.yaml
+#  ignore_errors: True
 
 
 ######################################################

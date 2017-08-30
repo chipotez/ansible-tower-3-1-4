@@ -15,6 +15,10 @@
 #          filter=ansible_eth[0-2]
 #          filter=ansible_*_mb
 
+- name: Nombre de Host
+  include: task/configure-hosts.yaml
+  ignore_errors: True
+
 #######################################################
 # Tareas de registro a RHN:                           #
 #     Usuario.                                        #
@@ -23,6 +27,10 @@
 #     Deshabilitación de repositorios innecesarios.   #
 #     Asignación de repositorios base.                #
 #######################################################
+
+
+
+
 - name: Registro de equipo vía Subscription Manager.
   include: task/post-install.yaml
   ignore_errors: True

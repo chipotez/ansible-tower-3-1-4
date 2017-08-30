@@ -24,7 +24,7 @@
 #     Asignación de repositorios base.                #
 #######################################################
 - name: Registro de equipo vía Subscription Manager.
-  include: tareas/servidor-base.yaml
+  include: task/post-install.yaml
   ignore_errors: True
 
 

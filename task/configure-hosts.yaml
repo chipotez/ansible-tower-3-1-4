@@ -1,10 +1,10 @@
 - name: Preparando /etc/hosts
   gather_facts: True
   hosts: nuevos
-  vars_prompt:
-     - name: "name"
-       prompt: "Ingresar nombre de host"
-       private: yes
+#  vars_prompt:
+#     - name: "name"
+#       prompt: "Ingresar nombre de host"
+#       private: yes
   tasks: 
     - lineinfile:
         path: /etc/hosts

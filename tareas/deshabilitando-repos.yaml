@@ -3,5 +3,7 @@
   hosts: nuevos
   tasks:
      - name: Borrando todos los repos.
-       yum:
-          disablerepo: "*"
+       yum_repository:
+       name: *
+       enabled: no
+       

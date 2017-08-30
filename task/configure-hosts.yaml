@@ -1,14 +1,14 @@
 - name: Preparando /etc/hosts
   gather_facts: True
   hosts: minimal
-  vars_prompt:
-     - name: "name"
-       prompt: "Ingresar nombre de host"
-       private: yes
+#  vars_prompt:
+#     - name: "name"
+#       prompt: "Ingresar nombre de host"
+#       private: yes
   tasks: 
     - name: Config | add hostname to hosts file
       lineinfile:
           dest: /etc/hosts
-          line: "{{ ansible_eth0.ipv4.address }} {{ ansible_hostname }}.{{ ipaserver_domain }} {{ ansible_hostname }}"
+          line: "{{ ansible_eth0.ipv4.address }} {{ ansible_fqdn }}"
           state: present
           backup: true

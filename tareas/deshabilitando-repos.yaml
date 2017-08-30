@@ -4,6 +4,6 @@
   tasks:
      - name: Borrando todos los repos.
        yum_repository:
-       name: "Red Hat Enterprise Linux 7 Server Release Candidate (RPMs)"
-       enabled: no
+          name: "Red Hat Enterprise Linux 7 Server Release Candidate (RPMs)"
+          enabled: no
        

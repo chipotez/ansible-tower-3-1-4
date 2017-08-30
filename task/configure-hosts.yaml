@@ -8,7 +8,7 @@
   tasks: 
     - lineinfile:
         path: /etc/hosts
-#        regexp: '^127\.0\.0\.1'
+        regexp: '^127\.0\.0\.1'
         line: '127.0.0.1 localhost'
         state: present
 #    - lineinfile:

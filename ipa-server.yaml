@@ -10,9 +10,9 @@
 # Creando Servidor IPA  GCP                           #
 #                                                     #
 #######################################################
-#- name: Instalacion de Servidor IPA
-#  include: tareas/servidor-base.yaml
-#  ignore_errors: True
+- name: Instalacion de Servidor IPA
+  include: tareas/servidor-base.yaml
+  ignore_errors: True
 
 
 ######################################################

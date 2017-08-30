@@ -3,9 +3,7 @@
   hosts: nuevos
   tasks:
      - name: Registrando Sistema en Portal de Red Hat.
-       #command: subscription-manager register --username='m.pineda' --password='redhat2016!.-'
-       #ignore_errors: True
-          redhat_subscription:
+       redhat_subscription:
              state: present
              username: m.pineda
              password: 'redhat2016!.-'

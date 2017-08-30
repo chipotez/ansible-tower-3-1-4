@@ -2,7 +2,7 @@
 - name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
   hosts: localhost
-  ansible_become True
+  ansible_become: True
   tasks:
      - file:
           path: /etc/foo.conf

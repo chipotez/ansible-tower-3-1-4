@@ -11,4 +11,4 @@
         regexp: '^127\.0\.0\.1'
         line: '127.0.0.1 localhost'
     - name: "add a string to the new file"
-         lineinfile dest=/etc/hosts regexp='^' line:'Hello, World!' state:present
+         "lineinfile dest=/etc/hosts regexp='^' line:'Hello, World!' state:present"

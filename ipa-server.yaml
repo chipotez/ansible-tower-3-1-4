@@ -1,7 +1,7 @@
 ---
 - name: Registro de Sistema operativo vía subscription manager.
   gather_facts: True
-  hosts: minimal
+  hosts: sominimal
   tasks:
      - name: Print mosh version
        debug: msg="address={{ ansible_default_ipv4.address }}"

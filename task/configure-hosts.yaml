@@ -6,12 +6,11 @@
 #       prompt: "Ingresar nombre de host"
 #       private: yes
   tasks: 
-    - lineinfile:
-        path: /etc/hosts
-        regexp: '^127\.0\.0\.1'
-        line: '127.0.0.1 localhost'
+#    - lineinfile:
+#        path: /etc/hosts
+#        regexp: '^127\.0\.0\.1'
+#        line: '127.0.0.1 localhost'
     - lineinfile:
         dest=/etc/hosts
-        regexp='^' 
         line='Hello, World!' 
         state=present

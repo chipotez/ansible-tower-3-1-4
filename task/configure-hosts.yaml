@@ -1,5 +1,6 @@
 - name: Preparando equipo para configuracion minima
   gather_facts: True
+  hosts: minimal
 #  vars_prompt:
 #     - name: "nombre_host"
 #       prompt: "Ingresar nombre de host"

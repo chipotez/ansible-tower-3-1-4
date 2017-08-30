@@ -3,10 +3,14 @@
   gather_facts: True
   hosts: nuevos
   tasks:
-     - setup:
-       filter: ansible_*
      - name: Print mosh version
        debug: msg="address={{ ansible_default_ipv4.address }}"
+     - template:
+         src: templates/dump_variables
+         dest: /tmp/ansible_variables
+     - fetch:
+         src: /tmp/ansible_variables
+         dest: "{{inventory_hostname}}_ansible_variables"
 #######################################################
 #                                                     #
 # Creando Servidor IPA  GCP                           #

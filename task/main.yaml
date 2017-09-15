@@ -1,15 +1,17 @@
 ---
 - hosts: all
-  remote_user: vagrant
-  become: true
+#  remote_user: root
+#  become: true
   vars:
     - tower_path: /tmp/ansible-tower-setup-bundle-3.1.2-1.el7
     - tower_admin_pass: redhat
+    - rhn_username: tu-user
+    - rhn_pass: tu-passwd
   tasks:
     - name: registrando rhel
       shell: |
         subscription-manager register --username "{{ rhn_username }}" --password "{{ rhn_pass }}"
-        subscription-manager subscribe --pool=8a85f9863f14fed3013f82b2c7b33615
+        subscription-manager subscribe --pool=8a85f9815dbd9297015dbdb8186b428d
       ignore_errors: true
     - name: disable all repos and enable the needed
       shell: |

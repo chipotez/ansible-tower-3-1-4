@@ -1,0 +1,56 @@
+---
+- hosts: all
+  remote_user: vagrant
+  become: true
+  vars:
+    - tower_path: /tmp/ansible-tower-setup-bundle-3.1.2-1.el7
+    - tower_admin_pass: redhat
+  tasks:
+    - name: registrando rhel
+      shell: |
+        subscription-manager register --username "{{ rhn_username }}" --password "{{ rhn_pass }}"
+        subscription-manager subscribe --pool=8a85f9863f14fed3013f82b2c7b33615
+      ignore_errors: true
+    - name: disable all repos and enable the needed
+      shell: |
+        subscription-manager repos --disable=*
+        subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms
+#    - name: Install EPEL repo.
+#      yum:
+#        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+#        state: present
+#      register: result
+#      until: '"failed" not in result'
+#      retries: 5
+#      delay: 10
+#    - name: Import EPEL GPG key.
+#      rpm_key: 
+#        key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7"
+#        state: present
+#    - name: Install ansible package
+#      yum: name=ansible state=latest
+    - name: download latest boundled tower 
+      get_url:
+        url: https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz
+        dest: /tmp 
+    - name: untar file
+      shell:
+        tar zxvf /tmp/ansible-tower-setup-bundle-latest.el7.tar.gz -C /tmp/
+    - name: configurar
+      lineinfile: 
+        dest: "{{ tower_path }}/inventory"
+        regexp: admin_password
+        line: "admin_password='{{ tower_admin_pass }}'"
+    - name: configurar rabbitmq_pass
+      lineinfile:
+        dest: "{{ tower_path }}/inventory"
+        regexp: rabbitmq_password
+        line: "rabbitmq_password='{{ tower_admin_pass }}'"
+    - name: configurar pg_pass
+      lineinfile:
+        dest: "{{ tower_path }}/inventory"
+        regexp: pg_password
+        line: "pg_password='{{ tower_admin_pass }}'"
+    - name: ejecutamos el instalador de Tower
+      shell:
+        "{{ tower_path }}/setup.sh"

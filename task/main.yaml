@@ -8,29 +8,18 @@
     - rhn_username: tu-user
     - rhn_pass: tu-passwd
   tasks:
-    - name: registrando rhel
-      shell: |
-        subscription-manager register --username "{{ rhn_username }}" --password "{{ rhn_pass }}"
-        subscription-manager subscribe --pool=8a85f9815dbd9297015dbdb8186b428d
-      ignore_errors: true
+    - name: Registrando Sistema en Portal de Red Hat.
+      redhat_subscription:
+          state: present
+          username: " {{ rhn_username }} " 
+          password: "{{ rhn_pass }}"
+          consumer_name: "{{ hostname_full }}"
+          autosubscribe: true
+          force_register: yes
     - name: disable all repos and enable the needed
       shell: |
         subscription-manager repos --disable=*
         subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms
-#    - name: Install EPEL repo.
-#      yum:
-#        name: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
-#        state: present
-#      register: result
-#      until: '"failed" not in result'
-#      retries: 5
-#      delay: 10
-#    - name: Import EPEL GPG key.
-#      rpm_key: 
-#        key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-7"
-#        state: present
-#    - name: Install ansible package
-#      yum: name=ansible state=latest
     - name: download latest boundled tower 
       get_url:
         url: https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz

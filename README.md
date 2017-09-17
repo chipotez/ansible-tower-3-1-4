@@ -23,7 +23,7 @@ Para poder realizar exitosamente el deploy mediante el playbook es necesario tom
     - rhn_pass: tu-password
     - hostname_full: hostname-full (identificador en RHN)
 
-**Ejemplos de ejecución:
+*Ejemplos de ejecución:
 
 ### Con Fingerprint y Keys:
 
@@ -32,4 +32,4 @@ Para poder realizar exitosamente el deploy mediante el playbook es necesario tom
 ### Con Variables :
     
     $ export ANSIBLE_HOST_KEY_CHECKING=False
-    $ ansible-playbook deploy.yml --ask-pass --extra-vars "tower_admin_pass: password rhn_username=tu-user rhn_pass=tu-password hostname_full: hostname-full"
+    $ ansible-playbook deploy.yml --ask-pass --extra-vars "tower_admin_pass=password rhn_username=tu-user rhn_pass=tu-password hostname_full=hostname-full"

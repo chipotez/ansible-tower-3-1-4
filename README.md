@@ -1,6 +1,7 @@
-Deploy Ansible Tower 3.1.4-1
+### Deploy Ansible Tower 3.1.4-1
 
-    Para poder realizar exitosamente el deploy mediante el playbook es necesario tomar las siguientes consideraciones:
+Para poder realizar exitosamente el deploy mediante el playbook es necesario tomar las siguientes consideraciones:
+
 1 .- Se asume que cuenta con el fingerprint del servidor remoto, caso contrario edite la variable en el siguiente archivo:
 
      /etc/ansible/ansible.cfg

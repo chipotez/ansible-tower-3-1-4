@@ -7,6 +7,7 @@
     - tower_admin_pass: redhat
     - rhn_username: tu-user
     - rhn_pass: tu-passwd
+    - hostname_full: hostname
   tasks:
     - name: Registrando Sistema en Portal de Red Hat.
       redhat_subscription:

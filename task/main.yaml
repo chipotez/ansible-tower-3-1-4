@@ -1,13 +1,13 @@
 ---
 - hosts: tower
-#  remote_user: root
+  remote_user: root
 #  become: true
   vars:
-    - tower_path: /tmp/ansible-tower-setup-bundle-3.1.2-1.el7
+    - tower_path: /tmp/ansible-tower-setup-bundle-3.1.4-1.el7
     - tower_admin_pass: redhat
-    - rhn_username: tu-user
-    - rhn_pass: tu-passwd
-    - hostname_full: hostname
+    - rhn_username: Tu-user
+    - rhn_pass: Tu-password
+    - hostname_full: Host-name-full
   tasks:
     - name: Registrando Sistema en Portal de Red Hat.
       redhat_subscription:
@@ -17,32 +17,43 @@
           consumer_name: "{{ hostname_full }}"
           autosubscribe: true
           force_register: yes
-    - name: disable all repos and enable the needed
+
+    - name: Habilitando canales necesarios.
       shell: |
         subscription-manager repos --disable=*
         subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms
-    - name: download latest boundled tower 
+
+    - name: Descargando Ansible Tower.
       get_url:
         url: https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz
         dest: /tmp 
-    - name: untar file
-      shell:
-        tar zxvf /tmp/ansible-tower-setup-bundle-latest.el7.tar.gz -C /tmp/
-    - name: configurar
+
+    - name: Extrayendo Ansible Tower.
+      unarchive:
+        src: /tmp/ansible-tower-setup-bundle-latest.el7.tar.gz 
+        dest: /tmp
+        remote_src: yes
+
+    - name: Configurando Password Admin.
       lineinfile: 
         dest: "{{ tower_path }}/inventory"
         regexp: admin_password
         line: "admin_password='{{ tower_admin_pass }}'"
-    - name: configurar rabbitmq_pass
+
+    - name: Configurando Password Rabbitmq.
       lineinfile:
         dest: "{{ tower_path }}/inventory"
         regexp: rabbitmq_password
         line: "rabbitmq_password='{{ tower_admin_pass }}'"
-    - name: configurar pg_pass
+
+    - name: Configurando Password PG.
       lineinfile:
         dest: "{{ tower_path }}/inventory"
         regexp: pg_password
         line: "pg_password='{{ tower_admin_pass }}'"
-    - name: ejecutamos el instalador de Tower
-      shell:
-        "{{ tower_path }}/setup.sh"
+
+    - name: Instalando Tower.
+      shell: | 
+        ./setup.sh
+      args:
+        chdir: "{{ tower_path }}"

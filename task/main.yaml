@@ -27,6 +27,9 @@
       yum:
         name: '*'
         state: latest
+        
+    - name: "Limpiando metadata de los repositorios."
+      command: "yum clean all"
 
     - name: Restart server
       shell: reboot

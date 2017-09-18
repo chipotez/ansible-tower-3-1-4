@@ -23,6 +23,23 @@
         subscription-manager repos --disable=*
         subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms
 
+    - name: Actualizando Sistema Operativo
+      yum:
+        name: '*'
+        state: latest
+
+    - name: Restart server
+      shell: reboot
+
+    - name: Wait for server to restart
+      local_action:
+        module: wait_for
+          host={{ ansible_default_ipv4.address }}
+          port=22
+          delay=3
+          timeout=60
+          state=started
+
     - name: Descargando Ansible Tower.
       get_url:
         url: https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz

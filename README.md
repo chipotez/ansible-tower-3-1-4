@@ -18,10 +18,10 @@ Para poder realizar exitosamente el deploy mediante el playbook es necesario tom
     - --ask-pass
 4 .- Modifique las variables acorde a sus necesidades dentro del playbook:
                 
-    - tower_admin_pass: password
-    - rhn_username: tu-user
-    - rhn_pass: tu-password
-    - hostname_full: hostname-full (identificador en RHN)
+    - tower_admin_pass: admin-password
+    - rhn_username: user-rhn
+    - rhn_pass: "password-rhn"
+    - hostname_full: host-id-rhn
 
 *Ejemplos de ejecución:
 

@@ -30,13 +30,13 @@
     - name: "Limpiando metadata de los repositorios."
       command: "yum clean all"
 
-    - name: reboot nodes
+    - name: Reiniciando nodo
       shell: sleep 2 && shutdown -r now "Ansible reboot"
       async: 1
       poll: 0
       ignore_errors: true
 
-    - name: wait for server to come back
+    - name: Esperando conexión con servidor.
       local_action: wait_for
       args:
         host: "{{ inventory_hostname }}"

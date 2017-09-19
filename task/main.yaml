@@ -1,13 +1,12 @@
 ---
 - hosts: tower
   remote_user: root
-#  become: true
   vars:
-    - tower_path: /tmp/ansible-tower-setup-bundle-3.1.4-1.el7
-    - tower_admin_pass: redhat
-    - rhn_username: Tu-user
-    - rhn_pass: Tu-password
-    - hostname_full: Host-name-full
+    - tower_path: /tmp/ansible-tower-last-release
+    - tower_admin_pass: admin-password
+    - rhn_username: user-rhn
+    - rhn_pass: "password-rhn"
+    - hostname_full: host-id-rhn
   tasks:
     - name: Registrando Sistema en Portal de Red Hat.
       redhat_subscription:
@@ -22,7 +21,7 @@
       shell: |
         subscription-manager repos --disable=*
         subscription-manager repos --enable rhel-7-server-rpms --enable rhel-7-server-extras-rpms --enable rhel-7-server-optional-rpms
-
+        
     - name: Actualizando Sistema Operativo
       yum:
         name: '*'
@@ -31,28 +30,41 @@
     - name: "Limpiando metadata de los repositorios."
       command: "yum clean all"
 
-    - name: Restart server
-      shell: reboot
+    - name: reboot nodes
+      shell: sleep 2 && shutdown -r now "Ansible reboot"
+      async: 1
+      poll: 0
+      ignore_errors: true
 
-    - name: Wait for server to restart
-      local_action:
-        module: wait_for
-          host={{ ansible_default_ipv4.address }}
-          port=22
-          delay=3
-          timeout=60
-          state=started
+    - name: wait for server to come back
+      local_action: wait_for
+      args:
+        host: "{{ inventory_hostname }}"
+        port: 22
+        state: started
+        delay: 30
+        timeout: 60
 
     - name: Descargando Ansible Tower.
       get_url:
         url: https://releases.ansible.com/ansible-tower/setup-bundle/ansible-tower-setup-bundle-latest.el7.tar.gz
-        dest: /tmp 
+        dest: /tmp
+
+    - file:
+        path: /tmp/paqueton
+        state: directory
 
     - name: Extrayendo Ansible Tower.
       unarchive:
         src: /tmp/ansible-tower-setup-bundle-latest.el7.tar.gz 
-        dest: /tmp
+        dest: /tmp/paqueton
         remote_src: yes
+      register: tar_reg
+
+    - name: Instalando Tower.
+      shell: mv * /tmp/ansible-tower-last-release
+      args:
+        chdir: /tmp/paqueton
 
     - name: Configurando Password Admin.
       lineinfile: 

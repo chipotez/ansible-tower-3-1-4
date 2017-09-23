@@ -1,0 +1,30 @@
+# Coloque aquí sus variables para la instalacion del servidor IPA
+---
+# IPA Keberos Realm and Domain
+#ipaserver_realm: "{{ ansible_domain | upper }}"
+#ipaserver_domain: "{{ ansible_domain }}"
+
+# IPA Keberos Realm and Domain
+ipaserver_realm: TESTDRIVE.COM
+ipaserver_domain: testdrive.com
+
+
+# IPA Kerberos Admin Configuration
+# Donot change the admin username, will cause issues with kinit
+ipaserver_admin_username: admin 
+ipaserver_admin_password : "redhat2017!.-"
+ipaserver_dir_admin_password : "redhat2017!.-"
+
+ipaserver_configure_ssh: True
+ipaserver_configure_sshd: True
+ipaserver_dns_forwarder: 8.8.8.8
+ipaserver_hbac_allow: True
+ipaserver_idstart: 5000
+ipaserver_idmax: False
+ipaserver_setup_dns: False
+ipaserver_ssh_trust_dns: False
+ipaserver_setup_ntp: True
+ipaserver_ui_redirect: True
+ipaserver_reverse: 0.168.192.in-addr.arpa.
+#ipaserver_subject: "O={{ ipaserver_realm }}{{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ansible_date_time.hour }}{{ ansible_date_time.minute }}"
+#ipaserver_ca_subject: "{{ ansible_hostname }}{{ ansible_date_time.year }}{{ ansible_date_time.month }}{{ ansible_date_time.day }}{{ansible_date_time.hour }}{{ ansible_date_time.minute }}"

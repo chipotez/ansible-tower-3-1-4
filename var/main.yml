@@ -1,10 +1,6 @@
 # Coloque aquí sus variables para la instalacion del servidor IPA
 ---
 # IPA Keberos Realm and Domain
-#ipaserver_realm: "{{ ansible_domain | upper }}"
-#ipaserver_domain: "{{ ansible_domain }}"
-
-# IPA Keberos Realm and Domain
 ipaserver_realm: TESTDRIVE.COM
 ipaserver_domain: testdrive.com
 

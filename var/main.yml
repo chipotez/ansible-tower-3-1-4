@@ -1,4 +1,4 @@
-# Coloque aquí sus variables para la instalacion del servidor IPA
+# Coloque aquí sus variables para la instalacion del servidor Ansible Tower.
 ---
 # IPA Keberos Realm and Domain
 ipaserver_realm: TESTDRIVE.COM
